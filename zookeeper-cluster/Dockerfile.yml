@@ -1,0 +1,34 @@
+# 从一个基础镜像centos:6.8开始构建
+FROM centos:6.8
+# 维护者信息
+MAINTAINER cybqzwork "cybqzwork@163.com"
+ 
+#容器环境处理
+RUN mkdir /usr/local/jdk
+ 
+#把当前目录下的jdk文件夹添加到镜像
+ADD jdk1.8.0_161  /usr/local/jdk/jdk1.8.0_161
+ADD zookeeper-3.4.11  /root/zookeeper-3.4.11
+ 
+ENV JAVA_HOME /usr/local/jdk/jdk1.8.0_161
+ENV CLASSPATH .:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+ENV PATH $JAVA_HOME/bin:$PATH
+ 
+RUN java -version
+ 
+ 
+ 
+VOLUME ["/data1"]
+ 
+#启动容器的时候执行的命令
+#容器入口,把zookeeper容器变得像一个zookeeper服务器一样
+#docker run -p 2181:2181 --name docker-zookeeper xiaofancn/zookeeper print-cmd
+ENTRYPOINT ["/root/zookeeper-3.4.11/bin/zkServer.sh"]
+#前台运行, 如果不设置这个, zookeeper后台运行的话, 容器会自动关闭, 进入Exited状态
+#容器启动的时候跟的参数=docker run -p 2181:2181 --name docker-zookeeper xiaofancn/zookeeper start-foreground
+#启动的时候追加参数如print-cmd，会覆盖默认参数
+#start-foreground 输出日志，容器内保持日志的输出，docker则保持up状态。
+CMD ["start-foreground"]
+ 
+#暴露的端口
+EXPOSE 2181 2888 3888
