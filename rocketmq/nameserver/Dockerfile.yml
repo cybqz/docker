@@ -1,0 +1,22 @@
+# Start from a Java image.
+FROM java:8
+ARG version
+# Rocketmq version
+ENV ROCKETMQ_VERSION 4.2.0
+# Rocketmq home
+ENV ROCKETMQ_HOME  /opt/rocketmq-${ROCKETMQ_VERSION}
+WORKDIR  ${ROCKETMQ_HOME}
+RUN mkdir -p \
+        /opt/logs \
+        /opt/store \
+        /opt/conf
+#这行代码进行了修改，基于本地的rocketmq编译包生成镜像，而不是通过网上下载。
+ADD rocketmq-all-4.2.0-bin-release.zip rocketmq.zip
+RUN       unzip rocketmq.zip \
+          && rm rocketmq.zip
+RUN chmod +x bin/mqnamesrv
+CMD cd ${ROCKETMQ_HOME}/bin && export JAVA_OPT=" -Duser.home=/opt" && sh mqnamesrv
+EXPOSE 9876
+VOLUME /opt/logs \
+        /opt/store \
+        /opt/conf
