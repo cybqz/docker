@@ -1,8 +1,17 @@
 拉取镜像：
 docker pull rocketmqinc/rocketmq
+docker pull styletang/rocketmq-console-ng
 
 启动 mqnamesrv：
 docker run -d -p 9876:9876 --name rmqnamesrv -e "MAX_POSSIBLE_HEAP=100000000" rocketmqinc/rocketmq sh mqnamesrv
 
 启动 rmqbroker ：
-docker run -d -p 10911:10911 -p 10909:10909 --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" -e "MAX_POSSIBLE_HEAP=200000000" rocketmqinc/rocketmq sh mqbroker
+docker run -d -p 10911:10911 -p 10909:10909 --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" -e "MAX_POSSIBLE_HEAP=200000000" rocketmqinc/rocketmq sh mqbroker  -c /opt/rocketmq-4.4.0/conf/broker.conf
+
+修改配置：
+docker exec -it --user root rmqbroker bash
+cd ../conf
+vi broker.conf
+
+启动控制台：
+docker run -e "JAVA_OPTS=-Drocketmq.namesrv.addr=192.168.124.6:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false" -p 8001:8080 -t styletang/rocketmq-console-ng
