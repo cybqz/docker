@@ -1,1 +1,5 @@
-docker run -p 3307:3306 --name mysql5.6 -v F:\Docker\volume\mysql5.6\logs:/logs -v F:\Docker\volume\mysql5.6\data:\var\lib\mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.6
+docker run -p 3306:3306 --name mysql5.6 -v F:\Docker\volume\mysql5.6\logs:/logs -v F:\Docker\volume\mysql5.6\data:\var\lib\mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.6
+
+docker run -p 3306:3306 --name mysql5.7 -v E:\Docker\volume\mysql5.7\logs:/logs -v E:\Docker\volume\mysql5.7\data:\var\lib\mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7
+
+docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v /usr/dockerv/mysql5.7/data:/var/lib/mysql:rw -v /usr/dockerv/mysql5.7/log:/var/log/mysql:rw -v /usr/dockerv/mysql5.7/config/my.cnf:/etc/mysql/my.cnf:rw -v /etc/localtime:/etc/localtime:ro --name mysql5.7 --restart=always -d mysql:5.7
